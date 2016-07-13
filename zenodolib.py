@@ -50,7 +50,7 @@ class ZenodoHandler:
         - Url: https://zenodo.org/api/deposit/depositions
         - Method: GET
         """
-        url = "{}/deposit/depositions?access_token={}".format(
+        url = "{}deposit/depositions?access_token={}".format(
             self.base_url, self.token)
         return requests.get(url, proxies=self.proxies)
 
@@ -63,7 +63,7 @@ class ZenodoHandler:
 
         : param deposition_id: Deposition identifier
         """
-        url = "{}/deposit/depositions?access_token={}".format(
+        url = "{}deposit/depositions?access_token={}".format(
             self.base_url, self.token)
         headers = {"Content-Type": "application/json"}
         return requests.post(url, data="{}", headers=headers,
