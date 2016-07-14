@@ -21,7 +21,6 @@ class StatusCode(enum.Enum):
 
 
 class ZenodoHandler:
-
     def __init__(self, access_token, proxies, test=False):
         """
         Initializes ZenodoHandler.
@@ -222,4 +221,30 @@ class ZenodoHandler:
         """
         url = "{}deposit/depositions?/{}/actions/publish?access_token={}". \
             format(self.base_url, deposition_id, self.token)
+        return requests.post(url, proxies=self.proxies)
+
+    def deposition_actions_edit(self, deposition_id):
+        """
+        Unlock already submitted deposition for editing.
+
+        - URL: https://zenodo.org/api/deposit/depositions/:id/actions/edit
+        - Method: POST
+
+        :param deposition_id: Deposition identifier.
+        """
+        url = "{}deposit/depositions?{}/actions/edit?access_token={}".format(
+            self.base_url, deposition_id)
+        return requests.post(url, proxies=self.proxies)
+
+    def depositions_actions_discard(self, deposition_id):
+        """
+        Discard changes in the current editing session.
+
+        - URL: https://zenodo.org/api/deposit/depositions/:id/actions/discard
+        - Method: POST
+
+        :param deposition_id: Deposition identifier
+        """
+        url = "{}deposit/depositions?{}/actions/discard?access_token={}".format(
+            self.base_url, deposition_id)
         return requests.post(url, proxies=self.proxies)
