@@ -147,7 +147,7 @@ class ZenodoHandler:
         """
         Upload a new file.
 
-        - Url: https://sandbox.zenodo.org/api/files/:bucket_url/:target_name
+        - Url: https://zenodo.org/api/files/:bucket_url/:target_name
         - Methods: PUT
 
         :param deposition_id: Deposition identifier
