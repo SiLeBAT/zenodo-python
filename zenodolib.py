@@ -34,13 +34,14 @@ class StatusCode(enum.Enum):
     not_found = 404
     method_not_allowed = 405
     conflict = 409
+    payload_too_large = 413
     unsupported_media_type = 415
     too_many_requests = 429
     internal_server_error = 500
 
 
 class ZenodoHandler:
-    def __init__(self, access_token, proxies, test=False):
+    def __init__(self, access_token, proxies=None, test=False):
         """
         Initializes ZenodoHandler.
 
@@ -146,18 +147,19 @@ class ZenodoHandler:
         """
         Upload a new file.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/files
-        - Methods: POST
+        - Url: https://zenodo.org/api/files/:bucket_url/:target_name
+        - Methods: PUT
 
         :param deposition_id: Deposition identifier
         :param target_name: Name of the file once uploaded
-        :param file_path: Path of local file to be uploaded
+        :param file_path: Path to local file to be uploaded
         """
-        url = "{}deposit/depositions/{}/files?access_token={}".format(
-            self.base_url, deposition_id, self.token)
-        data = {'filename': target_name}
-        files = {'file': open(file_path, 'rb')}
-        return requests.post(url, data=data, files=files, proxies=self.proxies)
+        r = self.deposition_retrieve(deposition_id)
+        bucket_url = r.json()['links']['bucket']
+        url = "{}/{}?access_token={}".format(bucket_url, target_name, self.token)
+        data = {'file': open(file_path, 'rb')}
+        headers = {"Accept": "application/json", "Content-Type": "application/octet-stream"}
+        return requests.put(url, data=data, headers=headers, proxies=self.proxies)
 
     def deposition_files_sort(self, deposition_id, file_ids):
         """
