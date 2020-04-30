@@ -114,7 +114,7 @@ class ZenodoHandler:
         url = "{}deposit/depositions/{}?access_token={}".format(
             self.base_url, deposition_id, self.token)
         headers = {"Content-Type": "application/json"}
-        return requests.put(url, data=data, headers=headers,
+        return requests.put(url, data=json.dumps(data), headers=headers,
                             proxies=self.proxies)
 
     def deposition_delete(self, deposition_id):
