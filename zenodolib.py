@@ -114,7 +114,7 @@ class ZenodoHandler:
         url = "{}deposit/depositions/{}?access_token={}".format(
             self.base_url, deposition_id, self.token)
         headers = {"Content-Type": "application/json"}
-        return requests.put(url, data=data, headers=headers,
+        return requests.put(url, data=json.dumps(data), headers=headers,
                             proxies=self.proxies)
 
     def deposition_delete(self, deposition_id):
@@ -126,7 +126,7 @@ class ZenodoHandler:
 
         :param deposition_id: Deposition identifier
         """
-        url = "{}deposit/depositions//{}?access_token={}".format(
+        url = "{}deposit/depositions/{}?access_token={}".format(
             self.base_url, deposition_id, self.token)
         return requests.delete(url, proxies=self.proxies)
 
@@ -178,7 +178,7 @@ class ZenodoHandler:
         return requests.put(url, data=data, headers=headers,
                             proxies=self.proxies)
 
-    def depositions_files_retrieve(self, deposition_id, file_id):
+    def deposition_files_retrieve(self, deposition_id, file_id):
         """
         Retrieve a single deposition file.
 
@@ -192,7 +192,7 @@ class ZenodoHandler:
             self.base_url, deposition_id, file_id, self.token)
         return requests.get(url, proxies=self.proxies)
 
-    def depositions_files_update(self, deposition_id, file_id, target_name):
+    def deposition_files_update(self, deposition_id, file_id, target_name):
         """
         Update a deposition file resource. Currently the only use is renaming an
         already uploaded file. If you want to to replace the actual file, please
@@ -213,7 +213,7 @@ class ZenodoHandler:
         return requests.put(url, data=data, headers=headers,
                             proxies=self.proxies)
 
-    def depositions_files_delete(self, deposition_id, file_id):
+    def deposition_files_delete(self, deposition_id, file_id):
         """
         Delete an existing deposition file resource. Note, only deposition files
         for unpublished depositions may be deleted.
@@ -238,7 +238,7 @@ class ZenodoHandler:
 
         :param deposition_id: Deposition identifier.
         """
-        url = "{}deposit/depositions?/{}/actions/publish?access_token={}".format(
+        url = "{}deposit/depositions/{}/actions/publish?access_token={}".format(
             self.base_url, deposition_id, self.token)
         return requests.post(url, proxies=self.proxies)
 
@@ -251,11 +251,11 @@ class ZenodoHandler:
 
         :param deposition_id: Deposition identifier.
         """
-        url = "{}deposit/depositions?{}/actions/edit?access_token={}".format(
+        url = "{}deposit/depositions/{}/actions/edit?access_token={}".format(
             self.base_url, deposition_id, self.token)
         return requests.post(url, proxies=self.proxies)
 
-    def depositions_actions_discard(self, deposition_id):
+    def deposition_actions_discard(self, deposition_id):
         """
         Discard changes in the current editing session.
 
@@ -264,6 +264,19 @@ class ZenodoHandler:
 
         :param deposition_id: Deposition identifier
         """
-        url = "{}deposit/depositions?{}/actions/discard?access_token={}".format(
+        url = "{}deposit/depositions/{}/actions/discard?access_token={}".format(
+            self.base_url, deposition_id, self.token)
+        return requests.post(url, proxies=self.proxies)
+
+    def deposition_actions_newversion(self, deposition_id):
+        """
+        Creates a new version of an existing deposition resource.
+
+        - Url: https://zenodo.org/api/deposit/depositions/:id/actions/newversion
+        - Method: POST
+
+        :param deposition_id: Deposition identifier
+        """
+        url = "{}deposit/depositions/{}/actions/newversion?access_token={}".format(
             self.base_url, deposition_id, self.token)
         return requests.post(url, proxies=self.proxies)
