@@ -61,6 +61,8 @@ class ZenodoHandler:
 
         self.token = access_token
         self.proxies = proxies
+        self.session = requests.Session()
+        self.session.params['access_token'] = access_token
 
     def deposition_list(self):
         """
@@ -69,9 +71,9 @@ class ZenodoHandler:
         - Url: https://zenodo.org/api/deposit/depositions
         - Method: GET
         """
-        url = "{}deposit/depositions?access_token={}".format(
-            self.base_url, self.token)
-        return requests.get(url, proxies=self.proxies)
+        url = "{}deposit/depositions".format(
+            self.base_url)
+        return self.session.get(url, proxies=self.proxies)
 
     def deposition_create(self):
         """
@@ -82,11 +84,11 @@ class ZenodoHandler:
 
         : param deposition_id: Deposition identifier
         """
-        url = "{}deposit/depositions?access_token={}".format(
-            self.base_url, self.token)
+        url = "{}deposit/depositions".format(
+            self.base_url)
         headers = {"Content-Type": "application/json"}
-        return requests.post(url, data="{}", headers=headers,
-                             proxies=self.proxies)
+        return self.session.post(url, data="{}", headers=headers,
+                                 proxies=self.proxies)
 
     def deposition_retrieve(self, deposition_id):
         """
@@ -97,9 +99,9 @@ class ZenodoHandler:
 
         :param deposition_id: Deposition identifier
         """
-        url = "{}deposit/depositions/{}?access_token={}".format(
-            self.base_url, deposition_id, self.token)
-        return requests.get(url, proxies=self.proxies)
+        url = "{}deposit/depositions/{}".format(
+            self.base_url, deposition_id)
+        return self.session.get(url, proxies=self.proxies)
 
     def deposition_update(self, deposition_id, data):
         """
@@ -111,11 +113,11 @@ class ZenodoHandler:
         :param deposition_id: Deposition identifier
         :param data: Data to upload
         """
-        url = "{}deposit/depositions/{}?access_token={}".format(
-            self.base_url, deposition_id, self.token)
+        url = "{}deposit/depositions/{}".format(
+            self.base_url, deposition_id)
         headers = {"Content-Type": "application/json"}
-        return requests.put(url, data=json.dumps(data), headers=headers,
-                            proxies=self.proxies)
+        return self.session.put(url, data=json.dumps(data), headers=headers,
+                                proxies=self.proxies)
 
     def deposition_delete(self, deposition_id):
         """
@@ -126,9 +128,9 @@ class ZenodoHandler:
 
         :param deposition_id: Deposition identifier
         """
-        url = "{}deposit/depositions/{}?access_token={}".format(
-            self.base_url, deposition_id, self.token)
-        return requests.delete(url, proxies=self.proxies)
+        url = "{}deposit/depositions/{}".format(
+            self.base_url, deposition_id)
+        return self.session.delete(url, proxies=self.proxies)
 
     def deposition_files_list(self, deposition_id):
         """
@@ -139,9 +141,9 @@ class ZenodoHandler:
 
         :param deposition_id: Deposition identifier
         """
-        url = "{}deposit/depositions/{}/files?access_token={}".format(
-            self.base_url, deposition_id, self.token)
-        return requests.get(url, proxies=self.proxies)
+        url = "{}deposit/depositions/{}/files".format(
+            self.base_url, deposition_id)
+        return self.session.get(url, proxies=self.proxies)
 
     def deposition_files_create(self, deposition_id, target_name, file_path):
         """
@@ -156,10 +158,11 @@ class ZenodoHandler:
         """
         r = self.deposition_retrieve(deposition_id)
         bucket_url = r.json()['links']['bucket']
-        url = "{}/{}?access_token={}".format(bucket_url, target_name, self.token)
+        url = "{}/{}".format(bucket_url, target_name)
         data = {'file': open(file_path, 'rb')}
         headers = {"Accept": "application/json", "Content-Type": "application/octet-stream"}
-        return requests.put(url, data=data, headers=headers, proxies=self.proxies)
+        return self.session.put(url, data=data, headers=headers,
+                                proxies=self.proxies)
 
     def deposition_files_sort(self, deposition_id, file_ids):
         """
@@ -171,12 +174,12 @@ class ZenodoHandler:
         :param deposition_id: Deposition identifier
         :param file_ids: List of ids of the files in the deposition
         """
-        url = "{}deposit/depositions/{}/files?access_token={}".format(
-            self.base_url, deposition_id, self.token)
+        url = "{}deposit/depositions/{}/files".format(
+            self.base_url, deposition_id)
         headers = {"Content-Type": "application/json"}
         data = json.dumps({'id': file_id for file_id in file_ids})
-        return requests.put(url, data=data, headers=headers,
-                            proxies=self.proxies)
+        return self.session.put(url, data=data, headers=headers,
+                                proxies=self.proxies)
 
     def deposition_files_retrieve(self, deposition_id, file_id):
         """
@@ -188,9 +191,9 @@ class ZenodoHandler:
         :param deposition_id: Deposition identifier
         :param file_id: Deposition file identifier
         """
-        url = "{}deposit/depositions/{}/files/{}?access_token={}".format(
-            self.base_url, deposition_id, file_id, self.token)
-        return requests.get(url, proxies=self.proxies)
+        url = "{}deposit/depositions/{}/files/{}".format(
+            self.base_url, deposition_id, file_id)
+        return self.session.get(url, proxies=self.proxies)
 
     def deposition_files_update(self, deposition_id, file_id, target_name):
         """
@@ -205,12 +208,12 @@ class ZenodoHandler:
         :param file_id: Deposition file identifier
         :param target_name: Name of the file once uploaded
         """
-        url = "{}deposit/depositions/{}/files/{}?access_token={}".format(
-            self.base_url, deposition_id, file_id, self.token)
+        url = "{}deposit/depositions/{}/files/{}".format(
+            self.base_url, deposition_id, file_id)
         headers = {"Content-Type": "application/json"}
         data = json.dumps({"filename", target_name})
 
-        return requests.put(url, data=data, headers=headers,
+        return self.session.put(url, data=data, headers=headers,
                             proxies=self.proxies)
 
     def deposition_files_delete(self, deposition_id, file_id):
@@ -224,9 +227,9 @@ class ZenodoHandler:
         :param deposition_id: Deposition identifier
         :param file_id: Deposition file id
         """
-        url = "{}deposit/depositions/{}/files/{}?access_token={}".format(
-            self.base_url, deposition_id, file_id, self.token)
-        return requests.delete(url, proxies=self.proxies)
+        url = "{}deposit/depositions/{}/files/{}".format(
+            self.base_url, deposition_id, file_id)
+        return self.session.delete(url, proxies=self.proxies)
 
     def deposition_actions_publish(self, deposition_id):
         """
@@ -238,9 +241,9 @@ class ZenodoHandler:
 
         :param deposition_id: Deposition identifier.
         """
-        url = "{}deposit/depositions/{}/actions/publish?access_token={}".format(
-            self.base_url, deposition_id, self.token)
-        return requests.post(url, proxies=self.proxies)
+        url = "{}deposit/depositions/{}/actions/publish".format(
+            self.base_url, deposition_id)
+        return self.session.post(url, proxies=self.proxies)
 
     def deposition_actions_edit(self, deposition_id):
         """
@@ -251,9 +254,9 @@ class ZenodoHandler:
 
         :param deposition_id: Deposition identifier.
         """
-        url = "{}deposit/depositions/{}/actions/edit?access_token={}".format(
-            self.base_url, deposition_id, self.token)
-        return requests.post(url, proxies=self.proxies)
+        url = "{}deposit/depositions/{}/actions/edit".format(
+            self.base_url, deposition_id)
+        return self.session.post(url, proxies=self.proxies)
 
     def deposition_actions_discard(self, deposition_id):
         """
@@ -264,9 +267,9 @@ class ZenodoHandler:
 
         :param deposition_id: Deposition identifier
         """
-        url = "{}deposit/depositions/{}/actions/discard?access_token={}".format(
-            self.base_url, deposition_id, self.token)
-        return requests.post(url, proxies=self.proxies)
+        url = "{}deposit/depositions/{}/actions/discard".format(
+            self.base_url, deposition_id)
+        return self.session.post(url, proxies=self.proxies)
 
     def deposition_actions_newversion(self, deposition_id):
         """
@@ -277,6 +280,6 @@ class ZenodoHandler:
 
         :param deposition_id: Deposition identifier
         """
-        url = "{}deposit/depositions/{}/actions/newversion?access_token={}".format(
-            self.base_url, deposition_id, self.token)
-        return requests.post(url, proxies=self.proxies)
+        url = "{}deposit/depositions/{}/actions/newversion".format(
+            self.base_url, deposition_id)
+        return self.session.post(url, proxies=self.proxies)
