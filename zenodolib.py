@@ -71,8 +71,7 @@ class ZenodoHandler:
         - Url: https://zenodo.org/api/deposit/depositions
         - Method: GET
         """
-        url = "{}deposit/depositions".format(
-            self.base_url)
+        url = "{}deposit/depositions".format(self.base_url)
         return self.session.get(url)
 
     def deposition_create(self):
@@ -84,8 +83,7 @@ class ZenodoHandler:
 
         : param deposition_id: Deposition identifier
         """
-        url = "{}deposit/depositions".format(
-            self.base_url)
+        url = "{}deposit/depositions".format(self.base_url)
         headers = {"Content-Type": "application/json"}
         return self.session.post(url, data="{}", headers=headers)
 
@@ -98,8 +96,7 @@ class ZenodoHandler:
 
         :param deposition_id: Deposition identifier
         """
-        url = "{}deposit/depositions/{}".format(
-            self.base_url, deposition_id)
+        url = "{}deposit/depositions/{}".format(self.base_url, deposition_id)
         return self.session.get(url)
 
     def deposition_update(self, deposition_id, data):
@@ -112,8 +109,7 @@ class ZenodoHandler:
         :param deposition_id: Deposition identifier
         :param data: Data to upload
         """
-        url = "{}deposit/depositions/{}".format(
-            self.base_url, deposition_id)
+        url = "{}deposit/depositions/{}".format(self.base_url, deposition_id)
         headers = {"Content-Type": "application/json"}
         return self.session.put(url, data=json.dumps(data), headers=headers)
 
@@ -126,8 +122,7 @@ class ZenodoHandler:
 
         :param deposition_id: Deposition identifier
         """
-        url = "{}deposit/depositions/{}".format(
-            self.base_url, deposition_id)
+        url = "{}deposit/depositions/{}".format(self.base_url, deposition_id)
         return self.session.delete(url)
 
     def deposition_files_list(self, deposition_id):
@@ -158,7 +153,8 @@ class ZenodoHandler:
         bucket_url = r.json()['links']['bucket']
         url = "{}/{}".format(bucket_url, target_name)
         data = {'file': open(file_path, 'rb')}
-        headers = {"Accept": "application/json", "Content-Type": "application/octet-stream"}
+        headers = {"Accept": "application/json",
+                   "Content-Type": "application/octet-stream"}
         return self.session.put(url, data=data, headers=headers)
 
     def deposition_files_sort(self, deposition_id, file_ids):
@@ -193,8 +189,9 @@ class ZenodoHandler:
 
     def deposition_files_update(self, deposition_id, file_id, target_name):
         """
-        Update a deposition file resource. Currently the only use is renaming an
-        already uploaded file. If you want to to replace the actual file, please
+        Update a deposition file resource.
+        Currently the only use is renaming an already uploaded file.
+        If you want to to replace the actual file, please
         delete the file and upload new file.
 
         - Url: https://zenodo.org/api/deposit/depositions/:id/files/:file_id
@@ -213,8 +210,8 @@ class ZenodoHandler:
 
     def deposition_files_delete(self, deposition_id, file_id):
         """
-        Delete an existing deposition file resource. Note, only deposition files
-        for unpublished depositions may be deleted.
+        Delete an existing deposition file resource.
+        Note, only deposition files for unpublished depositions may be deleted.
 
         - Url: https://zenodo.org/api/deposit/depositions/:id/files/:file_id
         - Method: DELETE
