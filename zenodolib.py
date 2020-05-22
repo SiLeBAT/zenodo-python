@@ -68,7 +68,7 @@ class ZenodoHandler:
         """
         List all depositions for the currently authenticated user.
 
-        - Url: https://zenodo.org/api/deposit/depositions
+        - Path: /api/deposit/depositions
         - Method: GET
         """
         url = "{}deposit/depositions".format(self.base_url)
@@ -78,7 +78,7 @@ class ZenodoHandler:
         """
         Create a new deposition resource.
 
-        - Url: https://zenodo.org/api/deposit/depositions
+        - Path: /api/deposit/depositions
         - Method: POST
 
         : param deposition_id: Deposition identifier
@@ -91,7 +91,7 @@ class ZenodoHandler:
         """
         Retrieve a single deposition resource.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id
+        - Path: /api/deposit/depositions/:id
         - Method: GET
 
         :param deposition_id: Deposition identifier
@@ -103,7 +103,7 @@ class ZenodoHandler:
         """
         Update an existing deposition resource.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id
+        - Path: /api/deposit/depositions/:id
         - Method: PUT
 
         :param deposition_id: Deposition identifier
@@ -117,7 +117,7 @@ class ZenodoHandler:
         """
         Delete an existing deposition resource.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id
+        - Path: /api/deposit/depositions/:id
         - Method: DELETE
 
         :param deposition_id: Deposition identifier
@@ -129,7 +129,7 @@ class ZenodoHandler:
         """
         List all deposition files for a given deposition.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/files
+        - Path: /api/deposit/depositions/:id/files
         - Method: GET
 
         :param deposition_id: Deposition identifier
@@ -142,7 +142,7 @@ class ZenodoHandler:
         """
         Upload a new file.
 
-        - Url: https://zenodo.org/api/files/:bucket_url/:target_name
+        - Path: /api/files/:bucket_url/:target_name
         - Methods: PUT
 
         :param deposition_id: Deposition identifier
@@ -161,7 +161,7 @@ class ZenodoHandler:
         """
         Sort the files for a deposition. By default, the first file is show
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/files
+        - Path: /api/deposit/depositions/:id/files
         - Method: PUT
 
         :param deposition_id: Deposition identifier
@@ -177,7 +177,7 @@ class ZenodoHandler:
         """
         Retrieve a single deposition file.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/files/:file_id
+        - Path: /api/deposit/depositions/:id/files/:file_id
         - Method: GET
 
         :param deposition_id: Deposition identifier
@@ -194,7 +194,7 @@ class ZenodoHandler:
         If you want to to replace the actual file, please
         delete the file and upload new file.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/files/:file_id
+        - Path: /api/deposit/depositions/:id/files/:file_id
         - Method: PUT
 
         :param deposition_id: Deposition identifier
@@ -213,7 +213,7 @@ class ZenodoHandler:
         Delete an existing deposition file resource.
         Note, only deposition files for unpublished depositions may be deleted.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/files/:file_id
+        - Path: /api/deposit/depositions/:id/files/:file_id
         - Method: DELETE
 
         :param deposition_id: Deposition identifier
@@ -228,7 +228,7 @@ class ZenodoHandler:
         Publish a deposition. Note, once a deposition is published, you can
         no longer delete it.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/actions/publish
+        - Path: /api/deposit/depositions/:id/actions/publish
         - Method: POST
 
         :param deposition_id: Deposition identifier.
@@ -241,7 +241,7 @@ class ZenodoHandler:
         """
         Unlock already submitted deposition for editing.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/actions/edit
+        - Path: /api/deposit/depositions/:id/actions/edit
         - Method: POST
 
         :param deposition_id: Deposition identifier.
@@ -254,7 +254,7 @@ class ZenodoHandler:
         """
         Discard changes in the current editing session.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/actions/discard
+        - Path: /api/deposit/depositions/:id/actions/discard
         - Method: POST
 
         :param deposition_id: Deposition identifier
@@ -267,7 +267,7 @@ class ZenodoHandler:
         """
         Creates a new version of an existing deposition resource.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/actions/newversion
+        - Path: /api/deposit/depositions/:id/actions/newversion
         - Method: POST
 
         :param deposition_id: Deposition identifier
