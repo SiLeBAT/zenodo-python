@@ -60,96 +60,89 @@ class ZenodoHandler:
             self.base_url = "https://zenodo.org/api/"
 
         self.token = access_token
-        self.proxies = proxies
         self.session = requests.Session()
+        self.session.proxies.update(proxies)
         self.session.params['access_token'] = access_token
 
     def deposition_list(self):
         """
         List all depositions for the currently authenticated user.
 
-        - Url: https://zenodo.org/api/deposit/depositions
+        - Path: /api/deposit/depositions
         - Method: GET
         """
-        url = "{}deposit/depositions".format(
-            self.base_url)
-        return self.session.get(url, proxies=self.proxies)
+        url = "{}deposit/depositions".format(self.base_url)
+        return self.session.get(url)
 
     def deposition_create(self):
         """
         Create a new deposition resource.
 
-        - Url: https://zenodo.org/api/deposit/depositions
+        - Path: /api/deposit/depositions
         - Method: POST
 
         : param deposition_id: Deposition identifier
         """
-        url = "{}deposit/depositions".format(
-            self.base_url)
+        url = "{}deposit/depositions".format(self.base_url)
         headers = {"Content-Type": "application/json"}
-        return self.session.post(url, data="{}", headers=headers,
-                                 proxies=self.proxies)
+        return self.session.post(url, data="{}", headers=headers)
 
     def deposition_retrieve(self, deposition_id):
         """
         Retrieve a single deposition resource.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id
+        - Path: /api/deposit/depositions/:id
         - Method: GET
 
         :param deposition_id: Deposition identifier
         """
-        url = "{}deposit/depositions/{}".format(
-            self.base_url, deposition_id)
-        return self.session.get(url, proxies=self.proxies)
+        url = "{}deposit/depositions/{}".format(self.base_url, deposition_id)
+        return self.session.get(url)
 
     def deposition_update(self, deposition_id, data):
         """
         Update an existing deposition resource.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id
+        - Path: /api/deposit/depositions/:id
         - Method: PUT
 
         :param deposition_id: Deposition identifier
         :param data: Data to upload
         """
-        url = "{}deposit/depositions/{}".format(
-            self.base_url, deposition_id)
+        url = "{}deposit/depositions/{}".format(self.base_url, deposition_id)
         headers = {"Content-Type": "application/json"}
-        return self.session.put(url, data=json.dumps(data), headers=headers,
-                                proxies=self.proxies)
+        return self.session.put(url, data=json.dumps(data), headers=headers)
 
     def deposition_delete(self, deposition_id):
         """
         Delete an existing deposition resource.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id
+        - Path: /api/deposit/depositions/:id
         - Method: DELETE
 
         :param deposition_id: Deposition identifier
         """
-        url = "{}deposit/depositions/{}".format(
-            self.base_url, deposition_id)
-        return self.session.delete(url, proxies=self.proxies)
+        url = "{}deposit/depositions/{}".format(self.base_url, deposition_id)
+        return self.session.delete(url)
 
     def deposition_files_list(self, deposition_id):
         """
         List all deposition files for a given deposition.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/files
+        - Path: /api/deposit/depositions/:id/files
         - Method: GET
 
         :param deposition_id: Deposition identifier
         """
         url = "{}deposit/depositions/{}/files".format(
             self.base_url, deposition_id)
-        return self.session.get(url, proxies=self.proxies)
+        return self.session.get(url)
 
     def deposition_files_create(self, deposition_id, target_name, file_path):
         """
         Upload a new file.
 
-        - Url: https://zenodo.org/api/files/:bucket_url/:target_name
+        - Path: /api/files/:bucket_url/:target_name
         - Methods: PUT
 
         :param deposition_id: Deposition identifier
@@ -160,15 +153,15 @@ class ZenodoHandler:
         bucket_url = r.json()['links']['bucket']
         url = "{}/{}".format(bucket_url, target_name)
         data = {'file': open(file_path, 'rb')}
-        headers = {"Accept": "application/json", "Content-Type": "application/octet-stream"}
-        return self.session.put(url, data=data, headers=headers,
-                                proxies=self.proxies)
+        headers = {"Accept": "application/json",
+                   "Content-Type": "application/octet-stream"}
+        return self.session.put(url, data=data, headers=headers)
 
     def deposition_files_sort(self, deposition_id, file_ids):
         """
         Sort the files for a deposition. By default, the first file is show
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/files
+        - Path: /api/deposit/depositions/:id/files
         - Method: PUT
 
         :param deposition_id: Deposition identifier
@@ -178,14 +171,13 @@ class ZenodoHandler:
             self.base_url, deposition_id)
         headers = {"Content-Type": "application/json"}
         data = json.dumps({'id': file_id for file_id in file_ids})
-        return self.session.put(url, data=data, headers=headers,
-                                proxies=self.proxies)
+        return self.session.put(url, data=data, headers=headers)
 
     def deposition_files_retrieve(self, deposition_id, file_id):
         """
         Retrieve a single deposition file.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/files/:file_id
+        - Path: /api/deposit/depositions/:id/files/:file_id
         - Method: GET
 
         :param deposition_id: Deposition identifier
@@ -193,15 +185,16 @@ class ZenodoHandler:
         """
         url = "{}deposit/depositions/{}/files/{}".format(
             self.base_url, deposition_id, file_id)
-        return self.session.get(url, proxies=self.proxies)
+        return self.session.get(url)
 
     def deposition_files_update(self, deposition_id, file_id, target_name):
         """
-        Update a deposition file resource. Currently the only use is renaming an
-        already uploaded file. If you want to to replace the actual file, please
+        Update a deposition file resource.
+        Currently the only use is renaming an already uploaded file.
+        If you want to to replace the actual file, please
         delete the file and upload new file.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/files/:file_id
+        - Path: /api/deposit/depositions/:id/files/:file_id
         - Method: PUT
 
         :param deposition_id: Deposition identifier
@@ -213,15 +206,14 @@ class ZenodoHandler:
         headers = {"Content-Type": "application/json"}
         data = json.dumps({"filename", target_name})
 
-        return self.session.put(url, data=data, headers=headers,
-                            proxies=self.proxies)
+        return self.session.put(url, data=data, headers=headers)
 
     def deposition_files_delete(self, deposition_id, file_id):
         """
-        Delete an existing deposition file resource. Note, only deposition files
-        for unpublished depositions may be deleted.
+        Delete an existing deposition file resource.
+        Note, only deposition files for unpublished depositions may be deleted.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/files/:file_id
+        - Path: /api/deposit/depositions/:id/files/:file_id
         - Method: DELETE
 
         :param deposition_id: Deposition identifier
@@ -229,57 +221,57 @@ class ZenodoHandler:
         """
         url = "{}deposit/depositions/{}/files/{}".format(
             self.base_url, deposition_id, file_id)
-        return self.session.delete(url, proxies=self.proxies)
+        return self.session.delete(url)
 
     def deposition_actions_publish(self, deposition_id):
         """
         Publish a deposition. Note, once a deposition is published, you can
         no longer delete it.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/actions/publish
+        - Path: /api/deposit/depositions/:id/actions/publish
         - Method: POST
 
         :param deposition_id: Deposition identifier.
         """
         url = "{}deposit/depositions/{}/actions/publish".format(
             self.base_url, deposition_id)
-        return self.session.post(url, proxies=self.proxies)
+        return self.session.post(url)
 
     def deposition_actions_edit(self, deposition_id):
         """
         Unlock already submitted deposition for editing.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/actions/edit
+        - Path: /api/deposit/depositions/:id/actions/edit
         - Method: POST
 
         :param deposition_id: Deposition identifier.
         """
         url = "{}deposit/depositions/{}/actions/edit".format(
             self.base_url, deposition_id)
-        return self.session.post(url, proxies=self.proxies)
+        return self.session.post(url)
 
     def deposition_actions_discard(self, deposition_id):
         """
         Discard changes in the current editing session.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/actions/discard
+        - Path: /api/deposit/depositions/:id/actions/discard
         - Method: POST
 
         :param deposition_id: Deposition identifier
         """
         url = "{}deposit/depositions/{}/actions/discard".format(
             self.base_url, deposition_id)
-        return self.session.post(url, proxies=self.proxies)
+        return self.session.post(url)
 
     def deposition_actions_newversion(self, deposition_id):
         """
         Creates a new version of an existing deposition resource.
 
-        - Url: https://zenodo.org/api/deposit/depositions/:id/actions/newversion
+        - Path: /api/deposit/depositions/:id/actions/newversion
         - Method: POST
 
         :param deposition_id: Deposition identifier
         """
         url = "{}deposit/depositions/{}/actions/newversion".format(
             self.base_url, deposition_id)
-        return self.session.post(url, proxies=self.proxies)
+        return self.session.post(url)
