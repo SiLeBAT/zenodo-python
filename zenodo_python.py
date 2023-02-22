@@ -19,6 +19,7 @@ Contributors:
 """
 import enum
 import json
+import os
 
 import requests
 
@@ -41,7 +42,7 @@ class StatusCode(enum.Enum):
 
 
 class ZenodoHandler:
-    def __init__(self, access_token, proxies=None, test=False):
+    def __init__(self, access_token=None, proxies=None, test=False):
         """
         Initializes ZenodoHandler.
 
@@ -54,6 +55,11 @@ class ZenodoHandler:
           otherwise connects to Zenodo.
         """
 
+        if access_token is None:
+            access_token = os.environ.get('ZENODO_TOKEN')
+            if test:
+                access_token = os.environ.get('SANDBOX_TOKEN')
+
         if test:
             self.base_url = "https://sandbox.zenodo.org/api/"
         else:
@@ -61,7 +67,8 @@ class ZenodoHandler:
 
         self.token = access_token
         self.session = requests.Session()
-        self.session.proxies.update(proxies)
+        if proxies:
+            self.session.proxies.update(proxies)
         self.session.params['access_token'] = access_token
 
     def deposition_list(self):
