@@ -152,10 +152,13 @@ class ZenodoHandler:
         r = self.deposition_retrieve(deposition_id)
         bucket_url = r.json()['links']['bucket']
         url = "{}/{}".format(bucket_url, target_name)
-        data = {'file': open(file_path, 'rb')}
-        headers = {"Accept": "application/json",
-                   "Content-Type": "application/octet-stream"}
-        return self.session.put(url, data=data, headers=headers)
+        # data = {'file': open(file_path, 'rb')}
+        # adaptation to new API, as commented in https://github.com/SiLeBAT/zenodo-python/issues/6 
+        # context manager approach:
+        with open(file_path, 'rb') as fp:
+            headers = {"Accept": "application/json",
+                       "Content-Type": "application/octet-stream"}
+            return self.session.put(url, data=fp, headers=headers)
 
     def deposition_files_sort(self, deposition_id, file_ids):
         """
