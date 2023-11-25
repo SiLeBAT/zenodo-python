@@ -156,7 +156,6 @@ class ZenodoHandler:
         # adaptation to new API, as commented in https://github.com/SiLeBAT/zenodo-python/issues/6 
         # context manager approach:
         with open(file_path, 'rb') as fp:
-            data=fp
             headers = {"Accept": "application/json",
                        "Content-Type": "application/octet-stream"}
             return self.session.put(url, data=fp, headers=headers)
